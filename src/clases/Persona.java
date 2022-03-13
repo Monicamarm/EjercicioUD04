@@ -14,6 +14,42 @@ public class Persona {
 	private Date fecha_nacimiento;
 	private String calle;
 
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public String getApellidos() {
+		return apellidos;
+	}
+
+	public void setApellidos(String apellidos) {
+		this.apellidos = apellidos;
+	}
+
+	public Date getFecha_nacimiento() {
+		return fecha_nacimiento;
+	}
+
+	public void setFecha_nacimiento(Date fecha_nacimiento) {
+		this.fecha_nacimiento = fecha_nacimiento;
+	}
+
+	public String getCalle() {
+		return calle;
+	}
+
+	public void setCalle(String calle) {
+		this.calle = calle;
+	}
+
+	public String getDni() {
+		return dni;
+	}
+
 	private static final Pattern REGEXP = Pattern.compile("[0-9]{8}[A-Z]");
 	private static final String DIGITO_CONTROL = "TRWAGMYFPDXBNJZSQVHLCKE";
 	private static final String[] INVALIDOS = new String[] { "00000000T", "00000001R", "99999999R" };
@@ -37,6 +73,14 @@ public class Persona {
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 
+		comprobacionDni(dni);
+
+		this.fecha_nacimiento = fecha_nacimiento;
+		this.calle = calle;
+
+	}
+
+	public void comprobacionDni(String dni) {
 		if (Arrays.binarySearch(INVALIDOS, dni) < 0 // (1)
 				&& REGEXP.matcher(dni).matches() // (2)
 				&& dni.charAt(8) == DIGITO_CONTROL.charAt(Integer.parseInt(dni.substring(0, 8)) % 23) // (3)
@@ -46,17 +90,14 @@ public class Persona {
 		} else {
 			throw new IllegalArgumentException("El DNI es incorrecto");
 		}
-
-		this.fecha_nacimiento = fecha_nacimiento;
-		this.calle = calle;
-
 	}
 
 //Método que realiza la diferencia entre la fecha actual y la fecha de	nacimiento de la persona para obtener su edad
 
 	public Integer obtenerEdad() {
-		return new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear()
+		int edad = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear()
 				- fecha_nacimiento.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear();
+		return edad;
 	}
 
 	@Override
